@@ -1,1 +1,1 @@
-# VverhAcademy
+# Academy

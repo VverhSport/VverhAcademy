@@ -43,7 +43,7 @@ h1{font-weight:300;text-transform:uppercase;font-size:clamp(34px,8.4vw,78px);lin
 
 /* Вкладки */
 .tabs-bar{background:var(--bg)}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 0 4px}
+.tabs{display:grid;grid-template-columns:repeat(var(--cols,2),1fr);grid-template-rows:repeat(2,auto);grid-auto-flow:column;gap:8px;padding:14px 0 4px}
 .tab{display:flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font-weight:500;font-size:11.5px;line-height:1.15;color:var(--ink);background:#fff;border-radius:999px;padding:13px 8px;transition:background .2s,color .2s,transform .1s;text-align:center}
 .tab i{flex:0 0 auto;width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--c)}
 .tab:hover{transform:translateY(-1px)}
@@ -53,7 +53,7 @@ h1{font-weight:300;text-transform:uppercase;font-size:clamp(34px,8.4vw,78px);lin
   .tabs-bar{position:sticky;top:0;z-index:5;background:rgba(238,238,238,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   .tabs{display:flex;padding:14px 0}
   .tab{font-size:13px;padding:13px 20px}
-  .tab.t-all{margin-left:auto}
+  .tab.t-rules{margin-left:auto}
 }
 
 /* Панель фильтров */
@@ -147,11 +147,88 @@ tbody tr:hover td{background:#FBFAFD}
 .tab .long{display:none}
 @media(min-width:760px){.tab .long{display:inline}}
 
+
+/* Протокол: трассы и уровни */
+.rt{display:inline-flex;align-items:center;gap:5px}
+.rt i{width:8px;height:8px;border-radius:2px;transform:rotate(45deg);background:var(--h);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+th.c-r small{display:block;font-size:8.5px;letter-spacing:0;text-transform:none;margin-top:3px;color:var(--muted);font-weight:400}
+.v{display:inline-block;min-width:30px;padding:4px 6px;border-radius:8px;line-height:1.1}
+.v.top{background:var(--purple);color:#fff;font-weight:600}
+.v.z2{background:#E3E0EE;color:var(--ink)}
+.v.z1{background:#fff;box-shadow:inset 0 0 0 1.5px #E3E0EE}
+.v.z{color:#C9C6D1}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:10.5px;color:var(--ink2);margin:4px 0 2px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend .v{font-size:9.5px;min-width:0;padding:3px 6px;font-weight:500}
+tr.divider td{background:var(--soft);text-align:left;padding:8px 12px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+tr.divider td span{position:sticky;left:12px}
+tr.is-out td{color:var(--muted)}
+tr.is-out .nm{color:var(--ink2)}
+.place.out{color:#B9B5C6}
+.place.out::before{border-style:dashed}
+.notice.info{border-left-color:var(--purple);margin:14px 0 0}
+
+/* Регламент */
+.rules{max-width:900px}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+@media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
+.fact{background:#fff;border-radius:18px;padding:16px 16px 14px;position:relative;overflow:hidden}
+.fact::after{content:"";position:absolute;right:-16px;top:-16px;width:46px;height:46px;border-radius:10px;transform:rotate(45deg);background:var(--c)}
+.fact b{display:block;font-size:26px;font-weight:600;line-height:1.05;color:var(--c)}
+.fact span{display:block;font-size:10.5px;color:var(--ink2);margin-top:6px;font-weight:300}
+.r-card{background:#fff;border-radius:var(--r);padding:20px 18px;margin:12px 0}
+.timeline{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.timeline{grid-template-columns:1fr 1fr 1fr;gap:12px}}
+.tl{position:relative;display:flex;gap:14px;align-items:flex-start}
+.tl-n{flex:0 0 auto;position:relative;width:44px;height:44px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:15px}
+.tl-n::before{content:"";position:absolute;inset:6px;border-radius:9px;transform:rotate(45deg);background:var(--c)}
+.tl-n span{position:relative}
+.tl h4{font-size:14px;font-weight:600;margin:4px 0 6px}
+.tl p{font-size:11px;font-weight:300;color:var(--ink2);line-height:1.5}
+.tl p b{font-weight:500;color:var(--ink)}
+.r-sec{background:#fff;border-radius:var(--r);padding:20px 18px 18px;margin:12px 0}
+@media(min-width:760px){.r-sec{padding:24px 28px 22px}}
+.r-sec>header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.r-num{flex:0 0 auto;position:relative;width:36px;height:36px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px}
+.r-num::before{content:"";position:absolute;inset:5px;border-radius:7px;transform:rotate(45deg);background:var(--c)}
+.r-num span{position:relative}
+.r-sec h3{font-size:16px;font-weight:600;line-height:1.2}
+.r-sec p{font-size:12.5px;font-weight:300;line-height:1.7;color:var(--ink2);margin:0 0 10px}
+.r-sec p:last-child{margin-bottom:0}
+.r-sec a{color:var(--purple);font-weight:500}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0 14px}
+.cat-chip{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px}
+.cat-chip b{display:block;font-size:14px;font-weight:600}
+.cat-chip span{font-size:10px;color:var(--muted);font-weight:300}
+.callout{border-radius:14px;padding:12px 14px;margin:12px 0 0;font-size:12px;line-height:1.6;font-weight:300;color:var(--ink2);background:var(--soft);border-left:4px solid var(--c)}
+.callout b{font-weight:500;color:var(--ink)}
+.dates{display:grid;gap:6px;margin:12px 0 0}
+.dates div{display:flex;gap:10px;align-items:baseline;font-size:12px;font-weight:300;color:var(--ink2);line-height:1.5}
+.dates i{flex:0 0 auto;width:9px;height:9px;border-radius:2px;transform:rotate(45deg) translateY(-1px);background:var(--c)}
+.dates b{font-weight:500;color:var(--ink)}
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 0;font-size:12px}
+.formula span{background:var(--soft);border-radius:999px;padding:8px 14px;font-weight:500}
+.formula em{font-style:normal;color:var(--muted);font-weight:600}
+.formula strong{background:var(--purple);color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
+.one{display:flex;align-items:center;gap:14px;margin:12px 0 0;padding:12px 14px;border-radius:14px;background:var(--soft)}
+.one b{font-size:30px;font-weight:600;line-height:1;color:var(--c)}
+.one span{font-size:12px;font-weight:300;color:var(--ink2);line-height:1.5}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:14px 0 12px;font-size:11px}
+.flow span{border:1.5px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:500;color:var(--ink2)}
+.flow svg{width:22px;height:10px;flex:0 0 auto}
+.awards{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:760px){.awards{grid-template-columns:1fr 1fr}}
+.award{border-radius:16px;background:var(--soft);padding:16px}
+.award h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;color:var(--ink)}
+.award p{font-size:12px}
+.medals{display:flex;gap:4px;margin:4px 0 10px}
+
 /* Сообщения */
 .notice{background:#fff;border-radius:18px;padding:14px 16px;margin:18px 0 0;font-size:11.5px;line-height:1.5;color:var(--ink2);border-left:5px solid var(--orange)}
 .notice.err{border-left-color:#E5484D}
 .notice code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--soft);padding:1px 5px;border-radius:5px}
-.empty{background:#fff;border-radius:var(--r);padding:34px 20px;text-align:center;color:var(--muted);font-size:12px;margin:14px 0}
+.empty{background:#fff;border-radius:var(--r);padding:34px 20px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;margin:14px 0}
+.empty b{color:var(--ink);font-weight:500;font-size:13px}
 .loading{padding:60px 0;text-align:center;color:var(--muted);font-size:12px}
 
 /* Подвал */
@@ -206,14 +283,114 @@ tbody tr:hover td{background:#FBFAFD}
   <a href="https://скалодромвверх.рф/">скалодромвверх.рф</a>
 </footer>
 
+<template id="rules-tpl">
+<article class="rules">
+  <div class="sec-head" style="--c:#64B145"><div><h2><i class="dia"></i>Регламент</h2>
+    <p>Регламент проведения «Кубок Вверх 2026–2027»</p></div></div>
+
+  <div class="facts">
+    <div class="fact" style="--c:#6C619C"><b>2</b><span>этапа по 2 недели</span></div>
+    <div class="fact" style="--c:#64B145"><b>4–15</b><span>лет · 5 возрастных категорий</span></div>
+    <div class="fact" style="--c:#EF7C00"><b>10–12</b><span>трасс на каждом этапе</span></div>
+    <div class="fact" style="--c:#0A0A0D"><b>1</b><span>попытка на одной трассе</span></div>
+  </div>
+
+  <div class="r-card">
+    <div class="timeline">
+      <div class="tl" style="--c:#6C619C"><span class="tl-n"><span>1</span></span>
+        <div><h4>1 этап</h4><p><b>ТЦ «Сказка»</b><br>с 26 октября по 8 ноября</p></div></div>
+      <div class="tl" style="--c:#64B145"><span class="tl-n"><span>2</span></span>
+        <div><h4>2 этап</h4><p><b>ТРК «Галактика»</b><br>предварительно март–апрель 2027 года</p></div></div>
+      <div class="tl" style="--c:#EF7C00"><span class="tl-n"><span>∑</span></span>
+        <div><h4>Итог кубка</h4><p><b>Сумма баллов за оба этапа</b><br>для борьбы за кубок нужны оба этапа</p></div></div>
+    </div>
+  </div>
+
+  <section class="r-sec" style="--c:#6C619C">
+    <header><span class="r-num"><span>1</span></span><h3>Общие положения</h3></header>
+    <p>Кубок «Вверх» — ежегодное соревнование академии по скалолазанию, состоящее из двух этапов. Первый этап проходит в ТЦ «Сказка», второй в ТРК «Галактика». Каждый этап длится 2 недели. Итоговый результат складывается из суммы баллов за оба этапа. Для участия в борьбе за кубок обязательно прохождение обоих этапов.</p>
+    <div class="dates">
+      <div><i></i><span>Первый этап проходит <b>с 26 октября по 8 ноября</b>.</span></div>
+      <div><i></i><span>Дата второго этапа на этапе согласования. Предварительная дата: <b>март–апрель 2027 года</b>.</span></div>
+    </div>
+  </section>
+
+  <section class="r-sec" style="--c:#64B145">
+    <header><span class="r-num"><span>2</span></span><h3>Участники и категории</h3></header>
+    <p>К участию допускаются воспитанники академии в возрасте от 4 до 15 лет, а также имеющие разряды с 1–3 юношеский (включительно) или без разряда. Участники делятся по таким возрастным категориям:</p>
+    <div class="cats">
+      <div class="cat-chip"><b>4–5 лет</b><span>мальчики и девочки</span></div>
+      <div class="cat-chip"><b>6–7 лет</b><span>мальчики и девочки</span></div>
+      <div class="cat-chip"><b>8–9 лет</b><span>мальчики и девочки</span></div>
+      <div class="cat-chip"><b>10–12 лет</b><span>мальчики и девочки</span></div>
+      <div class="cat-chip"><b>13–15 лет</b><span>мальчики и девочки</span></div>
+    </div>
+    <div class="callout">Воспитанники филиала <b>«Галактика»</b>, желающие участвовать, проходят первый этап на <b>«Сказке»</b> — либо по договорённости со своим тренером, либо через запись на тренировку к тренеру со «Сказки».</div>
+  </section>
+
+  <section class="r-sec" style="--c:#EF7C00">
+    <header><span class="r-num"><span>3</span></span><h3>Трассы</h3></header>
+    <p>На каждом этапе устанавливается от 10 до 12 трасс (итоговое число утверждает старший постановщик Пожаров Всеволод). Трассы различаются по сложности и распределяются так, чтобы каждая категория имела достаточную нагрузку.</p>
+  </section>
+
+  <section class="r-sec" style="--c:#6C619C">
+    <header><span class="r-num"><span>4</span></span><h3>Начисление баллов</h3></header>
+    <p>Баллы начисляются за каждый пройденный перехват. Трасса засчитывается при прохождении по установленным правилам без нарушений. Итоговый рейтинг участника — сумма баллов за оба этапа. Победители в каждой категории определяются по наибольшей сумме баллов.</p>
+    <div class="formula"><span>1 этап</span><em>+</em><span>2 этап</span><em>=</em><strong>итоговый рейтинг</strong></div>
+    <div class="callout">При равенстве баллов определить решение с тренерами и старшим постановщиком.</div>
+  </section>
+
+  <section class="r-sec" style="--c:#64B145">
+    <header><span class="r-num"><span>5</span></span><h3>Правила прохождения и судейства</h3></header>
+    <p>Трасса считается пройденной, если участник преодолел её самостоятельно, без физической помощи и подсказок по маршруту. Судья (тренер) обязан фиксировать только фактический результат.</p>
+    <div class="callout" style="--c:#EF7C00;margin-bottom:12px">Тренер, судящий своих воспитанников, обязан оценивать их по единым правилам наравне со всеми. Любая форма «подтягивания» участника на трассе, лишние попытки сверх регламента или завышение результата являются нарушением и ведут к <b>аннулированию зачёта по трассе</b>.</div>
+    <p>До старта первого этапа проводится обязательное собрание тренерского состава, на котором проговариваются правила, единые критерии зачёта и ответственность за их несоблюдение. Собрание опирается на настоящий регламент как на письменный документ.</p>
+    <div class="one"><b>1</b><span>Каждый участник проходит 1 попытку на одной трассе.</span></div>
+  </section>
+
+  <section class="r-sec" style="--c:#EF7C00">
+    <header><span class="r-num"><span>6</span></span><h3>Фиксация и подсчёт результатов</h3></header>
+    <div class="flow">
+      <span>Пролаз</span><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M1 5h17" stroke="#B9B5C6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="m16 1.5 4 3.5-4 3.5" fill="none" stroke="#B9B5C6" stroke-width="1.5"/></svg>
+      <span>Google-форма</span><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M1 5h17" stroke="#B9B5C6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="m16 1.5 4 3.5-4 3.5" fill="none" stroke="#B9B5C6" stroke-width="1.5"/></svg>
+      <span>Онлайн-рейтинг</span>
+    </div>
+    <p>Результаты вносятся тренерами в единую Google-форму сразу после пролаза участника. Данные автоматически поступают в онлайн-таблицу рейтинга, доступную для отслеживания в реальном времени по каждой категории. Ссылка: <a href="https://vverhsport.github.io/VverhAcademy/">vverhsport.github.io/VverhAcademy</a></p>
+    <p>Промежуточные результаты обновляются в реальном времени. Итоговые результаты этапа публикуются не позднее недели после его завершения.</p>
+  </section>
+
+  <section class="r-sec" style="--c:#6C619C">
+    <header><span class="r-num"><span>7</span></span><h3>Награждение</h3></header>
+    <div class="awards">
+      <div class="award">
+        <h4>Каждый этап</h4>
+        <div class="medals"><span class="place p1"><span>1</span></span><span class="place p2"><span>2</span></span><span class="place p3"><span>3</span></span></div>
+        <p>Медали этапа вручаются в каждом этапе за 1, 2 и 3 место в каждой категории.</p>
+        <p>Грамота и памятный приз выдаётся каждому участнику за каждый этап.</p>
+      </div>
+      <div class="award">
+        <h4>Итог двух этапов</h4>
+        <div class="medals"><span class="place p1"><span>1</span></span><span class="place p2"><span>2</span></span><span class="place p3"><span>3</span></span></div>
+        <p>Кубки и грамоты за 1, 2 и 3 место в каждой категории вручаются по итогу двух этапов на финальном награждении.</p>
+      </div>
+    </div>
+  </section>
+</article>
+</template>
+
 <script>
 /* ====== НАСТРОЙКИ ====== */
 const CONFIG = {
-  SHEET_ID: '19SX0cUBSEFyRKWXnPSWd0MCDlhi4Mk4dPFoWlfixiEU', // таблица «Клубные старты «Вверх» — база»
+  SHEET_ID: '1UAX-xXoaTuoZqW07QoYIyL-WcJ8YCCNCcXdvQPt7FHc', // таблица «Клубные старты «Вверх» — база»
   SHEET_NAME: 'Form_Responses', // лист с ответами формы
   CUP: 'Кубок «Вверх»',         // название кубка
   CUP_GEN: 'Кубка «Вверх»',     // для заголовков: «1 этап Кубка «Вверх»»
-  STAGES: [1, 2],               // этапы, вкладки которых видны всегда (новые из формы добавятся сами)
+  STAGES: [1, 2],               // этапы кубка (вкладки видны всегда)
+  STAGE_INFO: {                 // где и когда проходят этапы — из регламента
+    1: {place: 'ТЦ «Сказка»',     dates: '26 октября — 8 ноября 2026'},
+    2: {place: 'ТРК «Галактика»', dates: 'март — апрель 2027, дата уточняется'},
+  },
+  REQUIRE_ALL_STAGES: true,     // в зачёт кубка — только прошедшие все проведённые этапы
   TOP: 10,                      // сколько спортсменов показывать в категории в режиме «Топ-10»
   REFRESH_MIN: 2,               // автообновление, минут
   SHOW_PATRONYMIC: false,       // показывать отчество спортсмена
@@ -230,7 +407,14 @@ const AGES = ['4–5','6–7','8–9','10–12','13–15'];
 const GENDERS = ['Ж','М'];
 const DEMO = !CONFIG.SHEET_ID || new URLSearchParams(location.search).has('demo');
 
-const state = {tab:null, userTab:false, mode:{}, age:'all', branch:'all', q:'', D:null, routes:12, updated:null, error:null};
+/* цвета зацепов для подписи трасс в протоколе */
+const HOLD_COLORS = [
+  [/фиолет/,'#7E57C2'], [/син/,'#1E63D6'], [/голуб/,'#4FC3F7'], [/ж[её]лт/,'#F2C200'], [/салат/,'#9BD13B'],
+  [/зел[её]н/,'#43A047'], [/ч[её]рн/,'#1D1D1B'], [/розов/,'#F06292'], [/красн/,'#E53935'], [/оранж/,'#FB8C00'],
+  [/бел/,'#FFFFFF'], [/сер/,'#9E9E9E'], [/коричн/,'#8D6E63'], [/бирюз/,'#26A69A'],
+];
+
+const state = {tab:null, userTab:false, mode:{}, age:'all', branch:'all', q:'', D:null, meta:[], updated:null, error:null};
 
 /* ---------- утилиты ---------- */
 const norm = s => String(s ?? '').toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').trim();
@@ -238,6 +422,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const fmt = v => Number.isInteger(v) ? String(v) : String(Math.round(v*10)/10).replace('.', ',');
 function plural(n, f){ const a=Math.abs(n)%100, b=a%10; return f[(a>10&&a<20)?2:(b===1?0:(b>=2&&b<=4?1:2))]; }
 const people = n => `${n} ${plural(n,['участник','участника','участников'])}`;
+const routesWord = n => `${n} ${plural(n,['трассу','трассы','трасс'])}`;
 function titleCase(w){ return w.split('-').map(p => p ? p[0].toUpperCase()+p.slice(1).toLowerCase() : p).join('-'); }
 function displayName(raw){
   let w = String(raw).trim().split(/\s+/).filter(Boolean);
@@ -266,6 +451,34 @@ const nameKey = v => norm(v).split(' ').filter(w => !/(вич|вна|ична|о
 const parseBranch = v => (BRANCHES.find(b => b.re.test(norm(v))) || {}).id || null;
 const ageOrder = a => { const i = AGES.indexOf(a); return i < 0 ? 100 + parseInt(a) : i; };
 
+/* «Трасса 1. Фиолетовая 5Б. зона1 -4Б, зона2 -7Б, топ-10Б.» → описание трассы */
+function parseRoute(label, n){
+  const s = String(label || '');
+  const head = s.replace(/^\s*трасса\s*\d+\s*[.:,]?\s*/i, '').split(/зона|топ/i)[0];
+  const color = (head.match(/[А-Яа-яЁё]+/) || [''])[0];
+  const grade = (head.match(/\b\d[A-Za-zА-Яа-я]\+?/) || [''])[0];
+  const pts = re => { const m = s.match(re); return m ? +m[1] : null; };
+  const z1 = pts(/зона\s*1\D{0,4}?(\d+)/i), z2 = pts(/зона\s*2\D{0,4}?(\d+)/i), top = pts(/топ\D{0,4}?(\d+)/i);
+  const hc = HOLD_COLORS.find(([re]) => re.test(norm(color)));
+  return {n, color, grade, z1, z2, top, hex: hc ? hc[1] : '#B9B5C6'};
+}
+/* значение ответа → баллы; понимает и числа («10»), и текст («Топ», «Зона 2») */
+function routePoints(cell, meta){
+  if(cell == null) return 0;
+  const raw = cell.v ?? cell.f ?? '';
+  if(typeof raw === 'number') return raw;
+  const s = norm(raw);
+  if(!s) return 0;
+  if(meta){
+    if(/топ|top/.test(s) && meta.top != null) return meta.top;
+    if(/зона\s*2/.test(s) && meta.z2 != null) return meta.z2;
+    if(/зона\s*1/.test(s) && meta.z1 != null) return meta.z1;
+  }
+  const n = parseFloat(s.replace(',', '.'));
+  return isFinite(n) ? n : 0;
+}
+const level = (v, m) => !v ? 'z' : m && v === m.top ? 'top' : m && v === m.z2 ? 'z2' : m && v === m.z1 ? 'z1' : '';
+
 /* ---------- данные ---------- */
 async function fetchSheet(){
   const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(CONFIG.SHEET_NAME)}`;
@@ -275,19 +488,20 @@ async function fetchSheet(){
 }
 
 function parseSheet(json){
-  const cols = json.table.cols.map(c => norm(c.label || c.id));
+  const raw = json.table.cols.map(c => c.label || c.id || '');
+  const cols = raw.map(norm);
   const find = re => cols.findIndex(c => re.test(c));
   const iCat = find(/категор/), iName = find(/фио/) >= 0 ? find(/фио/) : find(/спортсмен/);
   const iBr = find(/филиал/), iCoach = find(/тренер/), iStage = find(/этап/);
   const rc = cols.map((c,i) => { const m = c.match(/трасс\D*(\d+)/); return m ? {n:+m[1], i} : null; })
                  .filter(Boolean).sort((a,b) => a.n - b.n);
+  const meta = rc.map(x => parseRoute(raw[x.i], x.n));
   const txt = c => c == null ? '' : String(c.v ?? c.f ?? '');
-  const num = c => { if(c == null) return 0; const n = parseFloat(String(c.v ?? c.f ?? '').replace(',','.')); return isFinite(n) ? n : 0; };
   const rows = (json.table.rows || []).map(r => ({
     stage: iStage >= 0 ? txt(r.c[iStage]) : '', cat: txt(r.c[iCat]), name: txt(r.c[iName]), branch: txt(r.c[iBr]),
-    coach: iCoach >= 0 ? txt(r.c[iCoach]) : '', routes: rc.map(x => num(r.c[x.i]))
+    coach: iCoach >= 0 ? txt(r.c[iCoach]) : '', routes: rc.map((x,k) => routePoints(r.c[x.i], meta[k]))
   }));
-  return {rows, routes: rc.length || 12};
+  return {rows, meta};
 }
 
 function rank(list, key){
@@ -298,7 +512,7 @@ function rankGroups(list, groupOf){
   const groups = {};
   list.forEach(r => (groups[groupOf(r)] ||= []).push(r));
   for(const g of Object.values(groups)){
-    rank(g, 'place');                                                      // место среди всех филиалов
+    rank(g, 'place');                                                           // место среди всех филиалов
     for(const b of BRANCHES) rank(g.filter(r => r.branch === b.id), 'bplace');  // место внутри филиала
   }
 }
@@ -317,6 +531,8 @@ function build(rows, nRoutes){
   const recs = [...byKey.values()];
   rankGroups(recs, r => r.stage + '|' + r.cat.age + r.cat.g);
 
+  const stages = [...new Set([...CONFIG.STAGES, ...recs.map(r => r.stage)])].sort((a,b) => a - b);
+  const held = stages.filter(n => recs.some(r => r.stage === n));                // этапы, по которым уже есть результаты
   const ath = new Map();     // общий итог: сумма баллов за все этапы
   for(const r of [...recs].sort((a,b) => a.stage - b.stage)){
     let a = ath.get(r.key);
@@ -325,14 +541,20 @@ function build(rows, nRoutes){
     a.name = r.name; a.branch = r.branch; a.coach = r.coach;     // данные из последнего этапа
   }
   const athletes = [...ath.values()];
-  rankGroups(athletes, a => a.cat.age + a.cat.g);
-  const stages = [...new Set([...CONFIG.STAGES, ...recs.map(r => r.stage)])].sort((a,b) => a - b);
-  return {recs, athletes, stages};
+  athletes.forEach(a => { a.inCup = !CONFIG.REQUIRE_ALL_STAGES || held.every(n => a.st[n]); a.place = a.bplace = null; });
+  rankGroups(athletes.filter(a => a.inCup), a => a.cat.age + a.cat.g);
+  const final = CONFIG.STAGES.every(n => held.includes(n));                       // проведены все этапы кубка
+  return {recs, athletes, stages, held, final};
 }
 
 /* демо-данные: без SHEET_ID или с ?demo в адресе */
+const DEMO_META = [
+  ['Фиолетовая','5Б',4,7,10], ['Синяя','6А',7,14,21], ['Жёлтая','6Б',13,26,39], ['Салатовая','5С',5,9,14],
+  ['Чёрная','6А',7,14,21], ['Розовая','6С',24,48,72], ['Красная','7А',45,90,130], ['Жёлтая','6Б',13,26,39],
+  ['Розовая','6С',24,48,72], ['Салатовая','7А',45,90,130], ['Красная','5А',2,4,6], ['Оранжевая','6Б',13,26,39],
+].map(([c,g,z1,z2,top],i) => parseRoute(`Трасса ${i+1}. ${c} ${g}. зона1 -${z1}Б, зона2 -${z2}Б, топ-${top}Б.`, i+1));
 function demoRows(){
-  let seed = 20261020; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let seed = 20261024; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const pick = a => a[Math.floor(rnd() * a.length)];
   const boys = ['Артём','Максим','Михаил','Иван','Даниил','Лев','Марк','Егор','Тимофей','Матвей','Кирилл','Роман','Никита','Арсений','Фёдор','Платон'];
   const girls = ['Анна','София','Мария','Ева','Варвара','Алиса','Полина','Виктория','Василиса','Вероника','Дарья','Ксения','Милана','Ульяна','Таисия','Злата'];
@@ -342,34 +564,38 @@ function demoRows(){
     skazka:['Власенко Владислав','Тихомирова Дарья','Подгорная Алена','Кипенко Кристина','Дивизнюк Юлия','Иванова Кристина','Расторгуева Ольга'],
     krasnaya:['Герасименко Алексей','Бецуков Ислам','Пешехонов Александр','Павлоградский Алексей'],
   };
-  const people = [], rows = [];
+  const diff = DEMO_META.map(m => Math.log(m.top) / Math.log(130));           // сложность трассы 0…1
+  const ppl = [], rows = [];
   for(const b of BRANCHES) for(const [ai,age] of AGES.entries()) for(const g of GENDERS){
     const n = Math.floor(rnd() * (b.id === 'krasnaya' ? 6 : 10));
     for(let k=0; k<n; k++){
       const s = pick(sur);
-      people.push({name:(g === 'Ж' ? s + 'а' : s) + ' ' + (g === 'Ж' ? pick(girls) : pick(boys)),
-        cat:`${age} лет · ${g}`, branch:b.name, coach:pick(coaches[b.id]), lvl: 8 + ai * 4 + rnd() * 14});
+      ppl.push({name:(g === 'Ж' ? s + 'а' : s) + ' ' + (g === 'Ж' ? pick(girls) : pick(boys)),
+        cat:`${age} лет · ${g}`, branch:b.name, coach:pick(coaches[b.id]), lvl: .25 + ai * .13 + rnd() * .3});
     }
   }
-  for(const stage of [1, 2]) for(const p of people){
-    if(rnd() < (stage === 1 ? .12 : .3)) continue;          // не все участвуют в каждом этапе
-    const routes = Array.from({length:12}, (_,i) => Math.max(0, Math.min(40, Math.round(p.lvl + stage * 1.5 - i * (0.6 + rnd()) + (rnd() - .4) * 12))));
-    rows.push({stage:`${stage} этап`, cat:p.cat, name:p.name, branch:p.branch, coach:p.coach, routes});
+  for(const stage of [1, 2]) for(const p of ppl){
+    if(rnd() < (stage === 1 ? .1 : .25)) continue;          // не все участвуют в каждом этапе
+    const routes = DEMO_META.map((m,i) => {
+      const x = p.lvl + stage * .04 - diff[i] + (rnd() - .5) * .35;
+      return x > .15 ? m.top : x > 0 ? m.z2 : x > -.15 ? m.z1 : 0;
+    });
+    rows.push({stage:String(stage), cat:p.cat, name:p.name, branch:p.branch, coach:p.coach, routes});
   }
   return rows;
 }
 
 async function load(){
   if(DEMO){
-    state.routes = 12; state.D = build(demoRows(), 12); state.updated = new Date();
+    state.meta = DEMO_META; state.D = build(demoRows(), DEMO_META.length); state.updated = new Date();
     return render();
   }
   try{
-    const {rows, routes} = parseSheet(await fetchSheet());
-    state.routes = routes; state.D = build(rows, routes); state.updated = new Date(); state.error = null;
+    const {rows, meta} = parseSheet(await fetchSheet());
+    state.meta = meta; state.D = build(rows, meta.length); state.updated = new Date(); state.error = null;
   }catch(e){
     state.error = e.message || String(e); console.warn('Таблица:', e);
-    if(!state.D) state.D = build([], 12);
+    if(!state.D){ state.meta = DEMO_META; state.D = build([], DEMO_META.length); }
   }
   render();
 }
@@ -377,22 +603,26 @@ async function load(){
 /* ---------- отрисовка ---------- */
 function tabs(){
   const stages = state.D ? state.D.stages : CONFIG.STAGES;
-  return [...stages.map(n => ({id:'s'+n, n, name:`${n} этап`, long:` ${CONFIG.CUP_GEN}`, color:'#6C619C'})),
-          {id:'all', name:'Общий итог', long:'', color:'#0A0A0D'}];
+  return [...stages.map(n => ({id:'s'+n, n, name:`${n} этап`, long:` ${CONFIG.CUP_GEN}`, color:'#6C619C', cls:'t-stage'})),
+          {id:'rules', name:'Регламент', long:'', color:'#64B145', cls:'t-rules'},
+          {id:'all', name:'Общий итог', long:'', color:'#0A0A0D', cls:'t-all'}];
 }
 const modeOf = tab => state.mode[tab] || (tab === 'all' ? 'table' : 'top');
 
 function renderTabs(){
   const el = document.getElementById('tabs'), list = tabs();
-  el.style.gridTemplateColumns = `repeat(${list.length},1fr)`;
+  el.style.setProperty('--cols', Math.ceil(list.length / 2));
   el.innerHTML = list.map(t =>
-    `<button class="tab${t.id==='all'?' t-all':''}" role="tab" style="--c:${t.color}" data-tab="${t.id}" aria-selected="${state.tab===t.id}"><i></i><span>${t.name}<span class="long">${t.long}</span></span></button>`).join('');
+    `<button class="tab ${t.cls}" role="tab" style="--c:${t.color}" data-tab="${t.id}" aria-selected="${state.tab===t.id}"><i></i><span>${t.name}<span class="long">${t.long}</span></span></button>`).join('');
 }
 
 function renderToolbar(){
+  const tb = document.getElementById('toolbar');
+  if(state.tab === 'rules'){ tb.innerHTML = ''; tb.hidden = true; return; }
+  tb.hidden = false;
   const mode = modeOf(state.tab);
   const modes = [['top','Топ-10'], ['table', state.tab === 'all' ? 'Все результаты' : 'Протокол']];
-  document.getElementById('toolbar').innerHTML = `
+  tb.innerHTML = `
     <div class="seg" role="group" aria-label="Вид">${modes.map(([m,l]) => `<button data-mode="${m}" aria-pressed="${mode===m}">${l}</button>`).join('')}</div>
     ${mode === 'table' ? `<label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Фамилия спортсмена или тренера" value="${esc(state.q)}" autocomplete="off"></label>` : ''}
@@ -408,82 +638,107 @@ function agesIn(list){
   return state.age === 'all' ? all : [state.age];
 }
 const byCat = (list, age, g, pk) => list.filter(r => r.cat.age === age && r.cat.g === g)
-  .sort((x,y) => x[pk] - y[pk] || x.name.localeCompare(y.name,'ru'));
-function placeBadge(p, sm){ return `<span class="place${sm?' sm':''}${p<=3?' p'+p:''}"><span>${p}</span></span>`; }
+  .sort((x,y) => (x[pk] ?? 1e9) - (y[pk] ?? 1e9) || y.total - x.total || x.name.localeCompare(y.name,'ru'));
+function placeBadge(p, sm){ return p == null ? `<span class="place out${sm?' sm':''}"><span>—</span></span>` : `<span class="place${sm?' sm':''}${p<=3?' p'+p:''}"><span>${p}</span></span>`; }
 function subline(r){
   const b = BR[r.branch];
   return [b ? `<i style="--c:${b.color}"></i>${b.name}` : '', r.coach ? esc(r.coach) : ''].filter(Boolean).join(' · ');
 }
 
 /* Топ-10: карточки Ж/М по возрастам */
-function cardsView(list){
+function cardsView(list, extra = {}){
   const own = state.branch !== 'all';
   const L = own ? list.filter(r => r.branch === state.branch) : list;
   const pk = own ? 'bplace' : 'place';
   let html = '';
   for(const age of agesIn(L)){
     const pair = GENDERS.map(g => byCat(L, age, g, pk));
-    if(state.age === 'all' && !pair[0].length && !pair[1].length) continue;
+    if(state.age === 'all' && !pair[0].length && !pair[1].length && !(extra.out || []).some(r => r.cat.age === age)) continue;
     pair.forEach((recs, i) => {
+      const outN = (extra.out || []).filter(r => r.cat.age === age && r.cat.g === GENDERS[i] && (!own || r.branch === state.branch)).length;
+      const outNote = outN ? `<p class="none">+ ${outN} вне зачёта кубка — пройдены не все этапы</p>` : '';
       const head = `<header class="card-h"><span class="age">${age} лет</span><span class="g" style="--c:#6C619C">${GENDERS[i]}</span>`;
-      if(!recs.length){ html += `<article class="card is-empty">${head}</header><p class="none">Пока нет результатов</p></article>`; return; }
+      if(!recs.length){ html += `<article class="card is-empty">${head}</header><p class="none">Пока нет результатов</p>${outNote}</article>`; return; }
       const top = recs.slice(0, CONFIG.TOP);
       html += `<article class="card">${head}<span class="cnt">${people(recs.length)}</span></header>
         <ol class="rows">${top.map(r => `<li class="row">${placeBadge(r[pk])}
           <div><div class="nm">${esc(r.name)}</div><div class="co">${subline(r)}</div></div>
           <b class="pts">${fmt(r.total)}</b></li>`).join('')}</ol>
-        ${recs.length > top.length ? `<button class="more" data-more="${age}">Все ${recs.length} →</button>` : ''}</article>`;
+        ${recs.length > top.length ? `<button class="more" data-more="${age}">Все ${recs.length} →</button>` : ''}${outNote}</article>`;
     });
   }
   return html ? `<div class="grid">${html}</div>` : `<div class="empty">${list.length ? 'Под выбранные фильтры результатов нет' : 'Результатов пока нет'}</div>`;
 }
 
+function routeHead(m, n){
+  if(!m) return `<th class="c-r" title="Трасса ${n}">Т${n}</th>`;
+  const tip = [`Трасса ${n}`, [m.color, m.grade].filter(Boolean).join(' '),
+    m.top != null ? `зона 1 — ${m.z1}, зона 2 — ${m.z2}, топ — ${m.top}` : ''].filter(Boolean).join(' · ');
+  return `<th class="c-r" title="${esc(tip)}"><span class="rt"><i style="--h:${m.hex}"></i>Т${n}</span>${m.grade ? `<small>${esc(m.grade)}</small>` : ''}</th>`;
+}
+
 /* Таблицы: протокол этапа или общий итог */
 function tablesView(list, kind){
-  const q = norm(state.q), D = state.D;
-  const f = list.filter(r => (state.branch === 'all' || r.branch === state.branch)
-    && (!q || norm(r.name).includes(q) || norm(r.coach).includes(q)));
-  const nums = Array.from({length:state.routes}, (_,i) => i + 1);
+  const q = norm(state.q), D = state.D, meta = state.meta;
+  const match = r => (state.branch === 'all' || r.branch === state.branch) && (!q || norm(r.name).includes(q) || norm(r.coach).includes(q));
+  const f = list.filter(match);
+  const nR = kind === 'stage' ? Math.max(meta.length, ...list.map(r => r.routes.length), 0) : 0;
   const cols = kind === 'stage'
-    ? nums.map(n => `<th class="c-r" title="Трасса ${n}">Т${n}</th>`).join('') + '<th class="c-sum">Сумма</th>'
+    ? Array.from({length:nR}, (_,i) => routeHead(meta[i], i + 1)).join('') + '<th class="c-sum">Сумма</th>'
     : D.stages.map(n => `<th class="c-st">${n} этап</th>`).join('') + '<th class="c-sum">Итог</th>';
+  const nCols = 3 + (kind === 'stage' ? nR : D.stages.length) + 1;
   const cells = r => kind === 'stage'
-    ? r.routes.map(v => `<td class="c-r${v ? '' : ' z'}">${fmt(v)}</td>`).join('')
+    ? r.routes.map((v,i) => { const l = level(v, meta[i]); return `<td class="c-r"><span class="v ${l}">${fmt(v)}</span></td>`; }).join('')
     : D.stages.map(n => { const s = r.st[n]; return s ? `<td class="c-st"><b>${fmt(s.total)}</b><small>${s.place} место</small></td>` : '<td class="c-st z">—</td>'; }).join('');
+  const row = r => { const b = BR[r.branch]; return `<tr${kind === 'total' && !r.inCup ? ' class="is-out"' : ''}>
+    <td class="c-pl">${placeBadge(r.place, true)}</td>
+    <td class="c-nm"><div class="nm">${esc(r.name)}</div>${r.coach?`<div class="co">${esc(r.coach)}</div>`:''}</td>
+    <td class="c-br">${b ? `<i style="--c:${b.color}"></i>${b.name}` : '—'}</td>
+    ${cells(r)}<td class="c-sum">${fmt(r.total)}</td></tr>`; };
   let html = '';
   for(const age of agesIn(list)) for(const g of GENDERS){
     const recs = byCat(f, age, g, 'place');
     if(!recs.length) continue;
-    html += `<section class="cat"><header class="cat-h"><span class="age">${age} лет</span><span class="g" style="--c:#0A0A0D">${g}</span><span class="cnt">${people(recs.length)}</span></header>
+    const inC = kind === 'total' ? recs.filter(r => r.inCup) : recs, out = kind === 'total' ? recs.filter(r => !r.inCup) : [];
+    html += `<section class="cat"><header class="cat-h"><span class="age">${age} лет</span><span class="g" style="--c:#0A0A0D">${g}</span><span class="cnt">${people(inC.length)}${out.length ? ` + ${out.length} вне зачёта` : ''}</span></header>
       <div class="tbl"><table><thead><tr><th class="c-pl">Место</th><th class="c-nm">Спортсмен</th><th class="c-br">Филиал</th>${cols}</tr></thead>
-      <tbody>${recs.map(r => { const b = BR[r.branch]; return `<tr>
-        <td class="c-pl">${placeBadge(r.place, true)}</td>
-        <td class="c-nm"><div class="nm">${esc(r.name)}</div>${r.coach?`<div class="co">${esc(r.coach)}</div>`:''}</td>
-        <td class="c-br">${b ? `<i style="--c:${b.color}"></i>${b.name}` : '—'}</td>
-        ${cells(r)}<td class="c-sum">${fmt(r.total)}</td></tr>`; }).join('')}</tbody></table></div></section>`;
+      <tbody>${inC.map(row).join('')}${out.length ? `<tr class="divider"><td colspan="${nCols}"><span>Вне зачёта кубка — пройдены не все этапы</span></td></tr>${out.map(row).join('')}` : ''}</tbody></table></div></section>`;
   }
-  return html || `<div class="empty">${list.length ? 'Ничего не найдено' : 'Результатов пока нет'}</div>`;
+  const legend = kind === 'stage' && meta.some(m => m.top != null)
+    ? `<div class="legend"><span><b class="v top">топ</b>Топ</span><span><b class="v z2">з2</b>Зона 2</span><span><b class="v z1">з1</b>Зона 1</span><span><b class="v z">0</b>Без зоны</span></div>` : '';
+  return html ? legend + html : `<div class="empty">${list.length ? 'Ничего не найдено' : 'Результатов пока нет'}</div>`;
+}
+
+function stageLine(n){
+  const i = CONFIG.STAGE_INFO[n];
+  return i ? `${i.place} · ${i.dates}` : `${n} этап ${CONFIG.CUP_GEN}`;
 }
 
 function renderView(){
   const v = document.getElementById('view'), D = state.D;
+  if(state.tab === 'rules'){ v.innerHTML = document.getElementById('rules-tpl').innerHTML; return; }
   if(!D){ v.innerHTML = '<div class="loading">Загружаем результаты…</div>'; return; }
   const mode = modeOf(state.tab), own = state.branch !== 'all' ? BR[state.branch] : null;
   if(state.tab === 'all'){
-    const list = D.athletes;
-    const tiles = [{name:'Всего', color:'#6C619C', n:list.length}, ...BRANCHES.map(b => ({name:b.name, color:b.color, n:list.filter(r => r.branch === b.id).length}))];
+    const all = D.athletes, inCup = all.filter(a => a.inCup), out = all.filter(a => !a.inCup);
+    const tiles = [{name:'В зачёте кубка', color:'#6C619C', n:inCup.length}, ...BRANCHES.map(b => ({name:b.name, color:b.color, n:inCup.filter(r => r.branch === b.id).length}))];
+    const pre = !D.final && D.held.length
+      ? `<div class="notice info">Предварительный итог: проведено ${D.held.length} из ${CONFIG.STAGES.length} ${plural(CONFIG.STAGES.length,['этапа','этапов','этапов'])}. В борьбе за кубок участвуют только спортсмены, прошедшие оба этапа.</div>` : '';
     v.innerHTML = `<div class="sec-head" style="--c:#0A0A0D"><div><h2><i class="dia"></i>Общий итог</h2>
-        <p>${CONFIG.CUP} · сумма баллов за все этапы</p></div></div>
+        <p>${CONFIG.CUP} · сумма баллов за оба этапа</p></div></div>
+      ${pre}
       <div class="tiles">${tiles.map(t => `<div class="tile" style="--c:${t.color}"><b>${t.n}</b><span>${t.name}</span></div>`).join('')}</div>
-      <p class="hint">${mode === 'top' ? `Топ-${CONFIG.TOP} в каждой категории по сумме этапов${own ? ` · места внутри филиала «${own.name}»` : ''}` : 'Баллы и место на каждом этапе · итог — сумма этапов'}</p>
-      ${mode === 'top' ? cardsView(list) : tablesView(list, 'total')}`;
+      <p class="hint">${mode === 'top' ? `Топ-${CONFIG.TOP} в каждой категории по сумме этапов${own ? ` · места внутри филиала «${own.name}»` : ''}` : 'Баллы и место на каждом этапе · итог — сумма этапов'} · при равенстве баллов место общее</p>
+      ${mode === 'top' ? cardsView(inCup, {out}) : tablesView(all, 'total')}`;
   } else {
     const n = +state.tab.slice(1), list = D.recs.filter(r => r.stage === n);
+    const nR = state.meta.length || 12;
     v.innerHTML = `<div class="sec-head" style="--c:#6C619C"><div><h2><i class="dia"></i>${n} этап</h2>
-        <p>${n} этап ${CONFIG.CUP_GEN} · сумма баллов за ${state.routes} ${plural(state.routes,['трассу','трассы','трасс'])}</p></div>
+        <p>${stageLine(n)}</p></div>
         <div class="stat"><b>${list.length}</b><span>${plural(list.length,['участник','участника','участников'])}</span></div></div>
-      <p class="hint">${mode === 'top' ? `Топ-${CONFIG.TOP} в каждой категории${own ? ` · места внутри филиала «${own.name}»` : ''}` : 'Протокол этапа: баллы по трассам и место в категории'}</p>
-      ${list.length ? (mode === 'top' ? cardsView(list) : tablesView(list, 'stage')) : `<div class="empty">Результатов ${n} этапа пока нет</div>`}`;
+      <p class="hint">${mode === 'top' ? `Топ-${CONFIG.TOP} в каждой категории${own ? ` · места внутри филиала «${own.name}»` : ''}` : 'Протокол этапа: баллы по трассам и место в категории'} · сумма баллов за ${routesWord(nR)}</p>
+      ${list.length ? (mode === 'top' ? cardsView(list) : tablesView(list, 'stage'))
+        : `<div class="empty"><b>Результатов ${n} этапа пока нет</b><br>${CONFIG.STAGE_INFO[n] ? `Этап проходит в ${esc(CONFIG.STAGE_INFO[n].place)}: ${esc(CONFIG.STAGE_INFO[n].dates)}. ` : ''}Результаты появятся здесь сразу после пролаза.</div>`}`;
   }
 }
 
@@ -494,14 +749,14 @@ function renderMeta(){
   m.innerHTML = `<span class="dot"></span><span>${!D ? 'Загружаем результаты…' : DEMO ? 'Демо-данные' : state.error ? 'Нет связи с таблицей' : `Обновлено в ${t} · ${people(D.athletes.length)}`}</span>`;
   document.getElementById('notice').innerHTML = DEMO
     ? `<div class="notice">Показаны демо-данные${CONFIG.SHEET_ID ? ': в адресе страницы есть <code>?demo</code>. Без него сайт берёт результаты из таблицы' : '. Чтобы выводились реальные результаты, впишите ID таблицы в <code>CONFIG.SHEET_ID</code>'}.</div>`
-    : state.error ? `<div class="notice err">Не удалось загрузить результаты. Проверьте интернет-соединение и что таблица открыта по ссылке («Все, у кого есть ссылка — читатель»).</div>` : '';
+    : state.error && state.tab !== 'rules' ? `<div class="notice err">Не удалось загрузить результаты. Проверьте интернет-соединение и что таблица открыта по ссылке («Все, у кого есть ссылка — читатель»).</div>` : '';
 }
 
 function pickDefaultTab(){
   const h = location.hash.slice(1);
   if(tabs().some(t => t.id === h)) return h;
-  const withData = state.D ? state.D.stages.filter(n => state.D.recs.some(r => r.stage === n)) : [];
-  return 's' + (withData.length ? withData[withData.length - 1] : (CONFIG.STAGES[0] || 1));   // последний прошедший этап
+  const held = state.D ? state.D.held : [];
+  return 's' + (held.length ? held[held.length - 1] : (CONFIG.STAGES[0] || 1));   // последний проведённый этап
 }
 
 function render(){
@@ -513,7 +768,7 @@ function setTab(id){
   if(!tabs().some(t => t.id === id)) id = pickDefaultTab();
   state.tab = id; state.userTab = true;
   if(location.hash.slice(1) !== id) history.replaceState(null, '', location.pathname + location.search + '#' + id);
-  renderTabs(); renderToolbar(); renderView();
+  renderTabs(); renderToolbar(); renderView(); renderMeta();
 }
 const scrollToContent = () => window.scrollTo({top: document.querySelector('.hero').offsetHeight, behavior:'smooth'});
 

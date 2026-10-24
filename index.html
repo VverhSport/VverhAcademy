@@ -325,7 +325,7 @@ tr.is-out .nm{color:var(--ink2)}
       <div class="cat-chip"><b>10–12 лет</b><span>мальчики и девочки</span></div>
       <div class="cat-chip"><b>13–15 лет</b><span>мальчики и девочки</span></div>
     </div>
-    <div class="callout">Воспитанники филиала <b>«Галактика»</b>, желающие участвовать, проходят первый этап на <b>«Сказке»</b> — либо по договорённости со своим тренером, либо через запись на тренировку к тренеру со «Сказки».</div>
+    <div class="callout">Воспитанники филиалов <b>«Галактика»</b> и <b>«Красная площадь»</b>, желающие участвовать, проходят первый этап на <b>«Сказке»</b> — либо по договорённости со своим тренером, либо через запись на тренировку к тренеру со «Сказки».</div>
   </section>
 
   <section class="r-sec" style="--c:#EF7C00">
@@ -335,9 +335,10 @@ tr.is-out .nm{color:var(--ink2)}
 
   <section class="r-sec" style="--c:#6C619C">
     <header><span class="r-num"><span>4</span></span><h3>Начисление баллов</h3></header>
-    <p>Баллы начисляются за каждый пройденный перехват. Трасса засчитывается при прохождении по установленным правилам без нарушений. Итоговый рейтинг участника — сумма баллов за оба этапа. Победители в каждой категории определяются по наибольшей сумме баллов.</p>
+    <div class="flow"><span>Зона 1</span><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M1 5h17" stroke="#B9B5C6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="m16 1.5 4 3.5-4 3.5" fill="none" stroke="#B9B5C6" stroke-width="1.5"/></svg><span>Зона 2</span><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M1 5h17" stroke="#B9B5C6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="m16 1.5 4 3.5-4 3.5" fill="none" stroke="#B9B5C6" stroke-width="1.5"/></svg><span>Топ</span></div>
+    <p>Баллы начисляются за взятие зоны 1, зоны 2 и топа. Трасса засчитывается при прохождении по установленным правилам без нарушений. Итоговый рейтинг участника — сумма баллов за оба этапа. Победители в каждой категории определяются по наибольшей сумме баллов.</p>
     <div class="formula"><span>1 этап</span><em>+</em><span>2 этап</span><em>=</em><strong>итоговый рейтинг</strong></div>
-    <div class="callout">При равенстве баллов определить решение с тренерами и старшим постановщиком.</div>
+    <div class="callout">При равенстве баллов устанавливаются одинаковые места, следующее место после них пропускается. Например:<div class="medals" style="margin:10px 0 2px"><span class="place p1"><span>1</span></span><span class="place p2"><span>2</span></span><span class="place p2"><span>2</span></span><span class="place"><span>4</span></span></div></div>
   </section>
 
   <section class="r-sec" style="--c:#64B145">
@@ -355,8 +356,8 @@ tr.is-out .nm{color:var(--ink2)}
       <span>Google-форма</span><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M1 5h17" stroke="#B9B5C6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="m16 1.5 4 3.5-4 3.5" fill="none" stroke="#B9B5C6" stroke-width="1.5"/></svg>
       <span>Онлайн-рейтинг</span>
     </div>
-    <p>Результаты вносятся тренерами в единую Google-форму сразу после пролаза участника. Данные автоматически поступают в онлайн-таблицу рейтинга, доступную для отслеживания в реальном времени по каждой категории. Ссылка: <a href="https://vverhsport.github.io/VverhAcademy/">vverhsport.github.io/VverhAcademy</a></p>
-    <p>Промежуточные результаты обновляются в реальном времени. Итоговые результаты этапа публикуются не позднее недели после его завершения.</p>
+    <p>Результаты вносятся тренерами в единую Google-форму в течение 3 дней после пролаза участника. Данные автоматически поступают в онлайн-таблицу рейтинга, доступную для отслеживания в реальном времени по каждой категории. Ссылка: <a href="https://vverhsport.github.io/VverhAcademy/">vverhsport.github.io/VverhAcademy</a></p>
+    <p>Промежуточные результаты обновляются в реальном времени. Об итоговых результатах этапа сообщим отдельным постом.</p>
   </section>
 
   <section class="r-sec" style="--c:#6C619C">
@@ -738,7 +739,7 @@ function renderView(){
         <div class="stat"><b>${list.length}</b><span>${plural(list.length,['участник','участника','участников'])}</span></div></div>
       <p class="hint">${mode === 'top' ? `Топ-${CONFIG.TOP} в каждой категории${own ? ` · места внутри филиала «${own.name}»` : ''}` : 'Протокол этапа: баллы по трассам и место в категории'} · сумма баллов за ${routesWord(nR)}</p>
       ${list.length ? (mode === 'top' ? cardsView(list) : tablesView(list, 'stage'))
-        : `<div class="empty"><b>Результатов ${n} этапа пока нет</b><br>${CONFIG.STAGE_INFO[n] ? `Этап проходит в ${esc(CONFIG.STAGE_INFO[n].place)}: ${esc(CONFIG.STAGE_INFO[n].dates)}. ` : ''}Результаты появятся здесь сразу после пролаза.</div>`}`;
+        : `<div class="empty"><b>Результатов ${n} этапа пока нет</b><br>${CONFIG.STAGE_INFO[n] ? `Этап проходит в ${esc(CONFIG.STAGE_INFO[n].place)}: ${esc(CONFIG.STAGE_INFO[n].dates)}. ` : ''}Результаты появятся здесь, как только тренеры внесут их в форму — в течение 3 дней после пролаза.</div>`}`;
   }
 }
 

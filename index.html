@@ -157,6 +157,8 @@ th.c-r small{display:block;font-size:8.5px;letter-spacing:0;text-transform:none;
 .v.z2{background:#E3E0EE;color:var(--ink)}
 .v.z1{background:#fff;box-shadow:inset 0 0 0 1.5px #E3E0EE}
 .v.z{color:#C9C6D1}
+.v.na{color:#D6D3DE}
+.pts small,.c-sum small{display:block;font-size:9px;font-weight:400;color:var(--muted);margin-top:2px;letter-spacing:.02em}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:10.5px;color:var(--ink2);margin:4px 0 2px}
 .legend span{display:inline-flex;align-items:center;gap:7px}
 .legend .v{font-size:9.5px;min-width:0;padding:3px 6px;font-weight:500}
@@ -455,7 +457,7 @@ const ageOrder = a => { const i = AGES.indexOf(a); return i < 0 ? 100 + parseInt
 /* «Трасса 1. Фиолетовая 5Б. зона1 -4Б, зона2 -7Б, топ-10Б.» → описание трассы */
 function parseRoute(label, n){
   const s = String(label || '');
-  const head = s.replace(/^\s*трасса\s*\d+\s*[.:,]?\s*/i, '').split(/зона|топ/i)[0];
+  const head = s.replace(/^\s*трасса\s*\d+\s*[.:,]?\s*/i, '').split(/срыв|непролаз|зона|топ/i)[0];
   const color = (head.match(/[А-Яа-яЁё]+/) || [''])[0];
   const grade = (head.match(/\b\d[A-Za-zА-Яа-я]\+?/) || [''])[0];
   const pts = re => { const m = s.match(re); return m ? +m[1] : null; };
@@ -464,21 +466,34 @@ function parseRoute(label, n){
   return {n, color, grade, z1, z2, top, hex: hc ? hc[1] : '#B9B5C6'};
 }
 /* значение ответа → баллы; понимает и числа («10»), и текст («Топ», «Зона 2») */
+/* пустая ячейка — трасса ещё не внесена (null); «0», «срыв», «непролаз» — 0 баллов */
 function routePoints(cell, meta){
-  if(cell == null) return 0;
+  if(cell == null) return null;
   const raw = cell.v ?? cell.f ?? '';
   if(typeof raw === 'number') return raw;
   const s = norm(raw);
-  if(!s) return 0;
+  if(!s) return null;
+  if(/срыв|непролаз/.test(s)) return 0;
   if(meta){
     if(/топ|top/.test(s) && meta.top != null) return meta.top;
     if(/зона\s*2/.test(s) && meta.z2 != null) return meta.z2;
     if(/зона\s*1/.test(s) && meta.z1 != null) return meta.z1;
   }
   const n = parseFloat(s.replace(',', '.'));
-  return isFinite(n) ? n : 0;
+  return isFinite(n) ? n : null;
 }
-const level = (v, m) => !v ? 'z' : m && v === m.top ? 'top' : m && v === m.z2 ? 'z2' : m && v === m.z1 ? 'z1' : '';
+const nRoutesOf = r => r.routes ? r.routes.length : (state.meta.length || 12);
+const level = (v, m) => v == null ? 'na' : !v ? 'z' : m && v === m.top ? 'top' : m && v === m.z2 ? 'z2' : m && v === m.z1 ? 'z1' : '';
+/* «Отметка времени» → число для сортировки: Date(2026,9,24,16,39,54) или «24.10.2026 16:39:54» */
+function parseTs(c){
+  if(c == null) return null;
+  const v = String(c.v ?? ''), f = String(c.f ?? '');
+  let m = v.match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?/);
+  if(m) return new Date(+m[1], +m[2], +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0)).getTime();
+  m = (f || v).match(/(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1], +(m[4]||0), +(m[5]||0), +(m[6]||0)).getTime();
+  const t = Date.parse(f || v); return isNaN(t) ? null : t;
+}
 
 /* ---------- данные ---------- */
 async function fetchSheet(){
@@ -493,13 +508,13 @@ function parseSheet(json){
   const cols = raw.map(norm);
   const find = re => cols.findIndex(c => re.test(c));
   const iCat = find(/категор/), iName = find(/фио/) >= 0 ? find(/фио/) : find(/спортсмен/);
-  const iBr = find(/филиал/), iCoach = find(/тренер/), iStage = find(/этап/);
+  const iBr = find(/филиал/), iCoach = find(/тренер/), iStage = find(/этап/), iTs = find(/отметка времени|timestamp/);
   const rc = cols.map((c,i) => { const m = c.match(/трасс\D*(\d+)/); return m ? {n:+m[1], i} : null; })
                  .filter(Boolean).sort((a,b) => a.n - b.n);
   const meta = rc.map(x => parseRoute(raw[x.i], x.n));
   const txt = c => c == null ? '' : String(c.v ?? c.f ?? '');
-  const rows = (json.table.rows || []).map(r => ({
-    stage: iStage >= 0 ? txt(r.c[iStage]) : '', cat: txt(r.c[iCat]), name: txt(r.c[iName]), branch: txt(r.c[iBr]),
+  const rows = (json.table.rows || []).map((r, idx) => ({
+    idx, ts: iTs >= 0 ? parseTs(r.c[iTs]) : null, stage: iStage >= 0 ? txt(r.c[iStage]) : '', cat: txt(r.c[iCat]), name: txt(r.c[iName]), branch: txt(r.c[iBr]),
     coach: iCoach >= 0 ? txt(r.c[iCoach]) : '', routes: rc.map((x,k) => routePoints(r.c[x.i], meta[k]))
   }));
   return {rows, meta};
@@ -519,17 +534,31 @@ function rankGroups(list, groupOf){
 }
 
 function build(rows, nRoutes){
-  const byKey = new Map();   // повтор ФИО в той же категории и том же этапе — берётся последняя запись
-  for(const r of rows){
+  /* Тренер может вносить спортсмена несколькими ответами формы (часть трасс сегодня, часть потом).
+     Ответы объединяются по ФИО + категории + этапу. По каждой трассе засчитывается ПЕРВОЕ внесённое
+     значение (по отметке времени); повторные значения той же трассы игнорируются. Пустая трасса — не внесена. */
+  const ordered = [...rows].map((r, i) => ({...r, idx: r.idx ?? i}))
+    .sort((a,b) => (a.ts ?? Infinity) - (b.ts ?? Infinity) || a.idx - b.idx);
+  const byKey = new Map();
+  for(const r of ordered){
     const cat = parseCat(r.cat);
     if(!cat || !String(r.name).trim()) continue;
     const stage = parseStage(r.stage);
-    const routes = Array.from({length:nRoutes}, (_,i) => +r.routes[i] || 0);
     const key = nameKey(r.name) + '|' + cat.age + cat.g;
-    byKey.set(stage + '#' + key, {stage, key, name: displayName(r.name), cat, branch: parseBranch(r.branch),
-      coach: displayName(r.coach), routes, total: routes.reduce((s,v) => s + v, 0)});
+    let rec = byKey.get(stage + '#' + key);
+    if(!rec) byKey.set(stage + '#' + key, rec = {stage, key, name: displayName(r.name), cat, branch: parseBranch(r.branch),
+      coach: displayName(r.coach), routes: Array(nRoutes).fill(null), ignored: 0});
+    for(let i = 0; i < nRoutes; i++){
+      const v = r.routes[i];
+      if(v == null) continue;
+      if(rec.routes[i] == null) rec.routes[i] = v;
+      else if(rec.routes[i] !== v) rec.ignored++;
+    }
   }
   const recs = [...byKey.values()];
+  recs.forEach(r => { r.filled = r.routes.filter(v => v != null).length; r.total = r.routes.reduce((s,v) => s + (v || 0), 0); });
+  const ign = recs.filter(r => r.ignored);
+  if(ign.length) console.info('Повторные значения трасс проигнорированы (засчитано первое):', ign.map(r => `${r.name}, ${r.stage} этап: ${r.ignored}`));
   rankGroups(recs, r => r.stage + '|' + r.cat.age + r.cat.g);
 
   const stages = [...new Set([...CONFIG.STAGES, ...recs.map(r => r.stage)])].sort((a,b) => a - b);
@@ -553,7 +582,7 @@ const DEMO_META = [
   ['Фиолетовая','5Б',4,7,10], ['Синяя','6А',7,14,21], ['Жёлтая','6Б',13,26,39], ['Салатовая','5С',5,9,14],
   ['Чёрная','6А',7,14,21], ['Розовая','6С',24,48,72], ['Красная','7А',45,90,130], ['Жёлтая','6Б',13,26,39],
   ['Розовая','6С',24,48,72], ['Салатовая','7А',45,90,130], ['Красная','5А',2,4,6], ['Оранжевая','6Б',13,26,39],
-].map(([c,g,z1,z2,top],i) => parseRoute(`Трасса ${i+1}. ${c} ${g}. зона1 -${z1}Б, зона2 -${z2}Б, топ-${top}Б.`, i+1));
+].map(([c,g,z1,z2,top],i) => parseRoute(`Трасса ${i+1}. ${c} ${g}. срыв/непролаз -0Б, зона1 -${z1}Б, зона2 -${z2}Б, топ-${top}Б.`, i+1));
 function demoRows(){
   let seed = 20261024; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const pick = a => a[Math.floor(rnd() * a.length)];
@@ -581,6 +610,7 @@ function demoRows(){
       const x = p.lvl + stage * .04 - diff[i] + (rnd() - .5) * .35;
       return x > .15 ? m.top : x > 0 ? m.z2 : x > -.15 ? m.z1 : 0;
     });
+    if(stage === 2 && rnd() < .35) for(let i = 6 + Math.floor(rnd() * 6); i < routes.length; i++) routes[i] = null;  // дозаполнят позже
     rows.push({stage:String(stage), cat:p.cat, name:p.name, branch:p.branch, coach:p.coach, routes});
   }
   return rows;
@@ -664,7 +694,7 @@ function cardsView(list, extra = {}){
       html += `<article class="card">${head}<span class="cnt">${people(recs.length)}</span></header>
         <ol class="rows">${top.map(r => `<li class="row">${placeBadge(r[pk])}
           <div><div class="nm">${esc(r.name)}</div><div class="co">${subline(r)}</div></div>
-          <b class="pts">${fmt(r.total)}</b></li>`).join('')}</ol>
+          <b class="pts">${fmt(r.total)}${r.filled != null && r.filled < nRoutesOf(r) ? `<small title="Внесено трасс">${r.filled}/${nRoutesOf(r)}</small>` : ''}</b></li>`).join('')}</ol>
         ${recs.length > top.length ? `<button class="more" data-more="${age}">Все ${recs.length} →</button>` : ''}${outNote}</article>`;
     });
   }
@@ -689,13 +719,13 @@ function tablesView(list, kind){
     : D.stages.map(n => `<th class="c-st">${n} этап</th>`).join('') + '<th class="c-sum">Итог</th>';
   const nCols = 3 + (kind === 'stage' ? nR : D.stages.length) + 1;
   const cells = r => kind === 'stage'
-    ? r.routes.map((v,i) => { const l = level(v, meta[i]); return `<td class="c-r"><span class="v ${l}">${fmt(v)}</span></td>`; }).join('')
+    ? r.routes.map((v,i) => { const l = level(v, meta[i]); return `<td class="c-r"><span class="v ${l}"${v == null ? ' title="Ещё не внесено"' : ''}>${v == null ? '—' : fmt(v)}</span></td>`; }).join('')
     : D.stages.map(n => { const s = r.st[n]; return s ? `<td class="c-st"><b>${fmt(s.total)}</b><small>${s.place} место</small></td>` : '<td class="c-st z">—</td>'; }).join('');
   const row = r => { const b = BR[r.branch]; return `<tr${kind === 'total' && !r.inCup ? ' class="is-out"' : ''}>
     <td class="c-pl">${placeBadge(r.place, true)}</td>
     <td class="c-nm"><div class="nm">${esc(r.name)}</div>${r.coach?`<div class="co">${esc(r.coach)}</div>`:''}</td>
     <td class="c-br">${b ? `<i style="--c:${b.color}"></i>${b.name}` : '—'}</td>
-    ${cells(r)}<td class="c-sum">${fmt(r.total)}</td></tr>`; };
+    ${cells(r)}<td class="c-sum">${fmt(r.total)}${kind === 'stage' && r.filled < nRoutesOf(r) ? `<small title="Внесено трасс">${r.filled}/${nRoutesOf(r)}</small>` : ''}</td></tr>`; };
   let html = '';
   for(const age of agesIn(list)) for(const g of GENDERS){
     const recs = byCat(f, age, g, 'place');
@@ -706,7 +736,7 @@ function tablesView(list, kind){
       <tbody>${inC.map(row).join('')}${out.length ? `<tr class="divider"><td colspan="${nCols}"><span>Вне зачёта кубка — пройдены не все этапы</span></td></tr>${out.map(row).join('')}` : ''}</tbody></table></div></section>`;
   }
   const legend = kind === 'stage' && meta.some(m => m.top != null)
-    ? `<div class="legend"><span><b class="v top">топ</b>Топ</span><span><b class="v z2">з2</b>Зона 2</span><span><b class="v z1">з1</b>Зона 1</span><span><b class="v z">0</b>Без зоны</span></div>` : '';
+    ? `<div class="legend"><span><b class="v top">топ</b>Топ</span><span><b class="v z2">з2</b>Зона 2</span><span><b class="v z1">з1</b>Зона 1</span><span><b class="v z">0</b>Срыв / непролаз</span><span><b class="v na">—</b>Ещё не внесено</span></div>` : '';
   return html ? legend + html : `<div class="empty">${list.length ? 'Ничего не найдено' : 'Результатов пока нет'}</div>`;
 }
 
